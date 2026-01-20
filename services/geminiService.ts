@@ -1,7 +1,7 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+const getAI = () => new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || '' });
 
 export const getStoreSetupSQL = async (): Promise<string> => {
   return `-- 1. Ensure tables exist
