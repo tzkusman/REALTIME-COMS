@@ -9,8 +9,15 @@ import { RealtimeCursors } from './components/RealtimeCursors';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'http://127.0.0.1:54321';
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH';
 
+// Log configuration
+console.log('Supabase URL:', SUPABASE_URL);
+console.log('Supabase Key loaded:', !!SUPABASE_KEY);
+
 const App: React.FC = () => {
-  const [supabase] = useState(() => createClient(SUPABASE_URL, SUPABASE_KEY));
+  const [supabase] = useState(() => {
+    console.log('Creating Supabase client with URL:', SUPABASE_URL);
+    return createClient(SUPABASE_URL, SUPABASE_KEY);
+  });
   const [user, setUser] = useState<User | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<string | null>(null);

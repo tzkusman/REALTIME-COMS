@@ -12,6 +12,29 @@ export const Auth: React.FC<AuthProps> = ({ supabase }) => {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    // Test Supabase connection on mount
+    const testConnection = async () => {
+      try {
+        console.log('Testing Supabase connection...');
+        const { data, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Connection error:', error);
+          setConnectionError(`Connection failed: ${error.message}`);
+        } else {
+          console.log('Connection successful');
+          setConnectionError(null);
+        }
+      } catch (err) {
+        console.error('Connection exception:', err);
+        setConnectionError(`Connection exception: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      }
+    };
+    
+    testConnection();
+  }, [supabase]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +62,7 @@ export const Auth: React.FC<AuthProps> = ({ supabase }) => {
         if (error) throw error;
       }
     } catch (error: any) {
+      console.error('Auth error:', error);
       alert(error.message);
     } finally {
       setLoading(false);
@@ -47,7 +71,14 @@ export const Auth: React.FC<AuthProps> = ({ supabase }) => {
 
   return (
     <div className="min-h-screen bg-[#09090b] flex items-center justify-center p-6">
-      <div className="w-full max-w-md bg-[#111114] border border-white/10 rounded-3xl p-8 shadow-2xl">
+      <div className="w-full max-w-md">
+        {connectionError && (
+          <div className="mb-6 bg-red-900/20 border border-red-500/30 rounded-xl p-4">
+            <p className="text-red-300 text-sm font-mono">{connectionError}</p>
+            <p className="text-red-200 text-xs mt-2">Make sure ngrok tunnel is still running and Supabase is accessible.</p>
+          </div>
+        )}
+        <div className="w-full max-w-md bg-[#111114] border border-white/10 rounded-3xl p-8 shadow-2xl">
         <div className="mb-8 text-center">
           <div className="w-16 h-16 bg-[#3ecf8e] rounded-2xl flex items-center justify-center text-[#09090b] mx-auto mb-4">
             <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M21.362 9.354H12V.396L2.638 14.646H12v8.958l9.362-14.25z" /></svg>
@@ -115,6 +146,7 @@ export const Auth: React.FC<AuthProps> = ({ supabase }) => {
           </button>
         </div>
       </div>
+        </div>
     </div>
   );
 };
