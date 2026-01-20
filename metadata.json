@@ -1,0 +1,5 @@
+{
+  "name": "Local Supabase Dev Studio",
+  "description": "A professional developer tool to connect, inspect, and query your local Supabase instance with AI-powered SQL assistance.",
+  "requestFramePermissions": []
+}
