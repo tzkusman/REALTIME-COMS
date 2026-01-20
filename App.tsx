@@ -16,7 +16,13 @@ console.log('Supabase Key loaded:', !!SUPABASE_KEY);
 const App: React.FC = () => {
   const [supabase] = useState(() => {
     console.log('Creating Supabase client with URL:', SUPABASE_URL);
-    return createClient(SUPABASE_URL, SUPABASE_KEY);
+    return createClient(SUPABASE_URL, SUPABASE_KEY, {
+      global: {
+        headers: {
+          'ngrok-skip-browser-warning': 'true'
+        }
+      }
+    });
   });
   const [user, setUser] = useState<User | null>(null);
   const [isReady, setIsReady] = useState(false);
